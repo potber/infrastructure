@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: potber-client-test
+  name: potber-client
 spec:
   rules:
     - host: test.potber.de
@@ -11,7 +11,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: potber-client-test
+                name: potber-client
                 port:
                   number: 80
   tls:

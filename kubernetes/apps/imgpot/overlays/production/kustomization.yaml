@@ -1,0 +1,22 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: potber-prod
+resources:
+  - ../../base
+  - ghcr-creds.secret.yaml
+configMapGenerator:
+  - name: imgpot-config
+    envs:
+      - imgpot.env
+secretGenerator:
+  - name: imgpot-secret
+    envs:
+      - imgpot.secret.env
+images:
+  - name: ghcr.io/herrkris/imgpot
+    newTag: latest
+replicas:
+  - name: imgpot
+    count: 1
+patches:
+  - path: patch-imgpot-ingress.yaml

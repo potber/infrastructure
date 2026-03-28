@@ -5,7 +5,7 @@ This directory is the Flux entrypoint for the production cluster.
 ## What Flux reconciles here
 
 - `infrastructure.yaml` points at `./kubernetes/infrastructure/production`
-- `apps.yaml` points at `./kubernetes/potber`
+- `apps.yaml` points at `./kubernetes/apps`
 
 Bootstrap Flux against this path:
 
@@ -48,8 +48,10 @@ kubectl create secret generic sops-age \
 
 The following files are now intended to be committed in encrypted form:
 
-- `kubernetes/potber/overlays/prod/potber-api.secret.env`
-- `kubernetes/potber/overlays/prod/imgpot.secret.env`
+- `kubernetes/apps/potber/overlays/production/potber-api.secret.env`
+- `kubernetes/apps/potber/overlays/test/potber-api.secret.env`
+- `kubernetes/apps/imgpot/overlays/production/imgpot.secret.env`
+- `kubernetes/apps/imgpot/overlays/production/ghcr-creds.secret.yaml`
 
 Flux will decrypt them during reconciliation. Plain `kubectl kustomize` output remains encrypted locally, which is expected.
 
@@ -57,7 +59,7 @@ For local editing or inspection, point `sops` at the repo-local key:
 
 ```bash
 export SOPS_AGE_KEY_FILE=/Users/kristof/Projects/potber/infra/kubernetes/clusters/production/.sops.agekey
-sops /Users/kristof/Projects/potber/infra/kubernetes/potber/overlays/prod/potber-api.secret.env
+sops /Users/kristof/Projects/potber/infra/kubernetes/apps/potber/overlays/production/potber-api.secret.env
 ```
 
-Do not use plain `kubectl apply -k /Users/kristof/Projects/potber/infra/kubernetes/potber` once these secrets are encrypted. Flux can decrypt them; raw `kubectl` will apply encrypted values instead.
+Do not use plain `kubectl apply -k /Users/kristof/Projects/potber/infra/kubernetes/apps` once these secrets are encrypted. Flux can decrypt them; raw `kubectl` will apply encrypted values instead.
