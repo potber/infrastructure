@@ -20,6 +20,7 @@ The Hetzner API token is read from the `HETZNER_TOKEN` environment variable.
 
 ```bash
 export HETZNER_TOKEN=<your-token>
+gomplate -f cluster.yaml.tpl -o cluster.yaml
 hetzner-k3s create --config cluster.yaml
 ```
 
@@ -60,6 +61,31 @@ Verify the load balancer IP is assigned:
 
 ```bash
 kubectl get svc -n ingress-nginx
+```
+
+## Setup Let's Encrypt
+
+Install cert-manager via Helm, then apply the `ClusterIssuer` for Let's Encrypt production certificates.
+
+**1. Install cert-manager**
+
+```bash
+helm repo add jetstack https://charts.jetstack.io
+helm repo update
+
+helm upgrade --install \
+  --namespace cert-manager \
+  --create-namespace \
+  --set crds.enabled=true \
+  cert-manager jetstack/cert-manager
+```
+
+**2. Apply the ClusterIssuer**
+
+```bash
+export CLUSTER_ADMIN_EMAIL=<email-address>
+gomplate -f ./lets-encrypt/cert-manager.yaml.tpl -o ./lets-encrypt/cert-manager.yaml
+kubectl apply -f ./lets-encrypt/cert-manager.yaml
 ```
 
 ## Delete the cluster

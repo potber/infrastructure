@@ -5,4 +5,5 @@ kubeconfig
 *.secret.env
 !kubernetes/**/*.secret.env
 *.agekey
-cluster.yaml
+hetzner/*.yaml
+hetzner/lets-encrypt/*.yaml
