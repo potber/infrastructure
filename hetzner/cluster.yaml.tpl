@@ -1,7 +1,7 @@
 hetzner_token: {{ .Env.HETZNER_TOKEN }}
 cluster_name: cluster
 kubeconfig_path: "./kubeconfig"
-k3s_version: v1.32.0+k3s1
+k3s_version: v1.35.2+k3s1
 
 networking:
   ssh:
@@ -19,6 +19,8 @@ networking:
 addons:
   metrics_server:
     enabled: true
+  cluster_autoscaler:
+    enabled: false
 
 masters_pool:
   instance_type: cx23
