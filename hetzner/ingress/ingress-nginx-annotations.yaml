@@ -1,0 +1,12 @@
+controller:
+  kind: DaemonSet
+  service:
+    annotations:
+      load-balancer.hetzner.cloud/location: nbg1
+      load-balancer.hetzner.cloud/name: nginx-ingress-lb
+      load-balancer.hetzner.cloud/use-private-ip: "true"
+
+      load-balancer.hetzner.cloud/uses-proxyprotocol: 'true'
+      load-balancer.hetzner.cloud/hostname: potber.de
+      load-balancer.hetzner.cloud/http-redirect-https: 'true'
+      load-balancer.hetzner.cloud/algorithm: round_robin
