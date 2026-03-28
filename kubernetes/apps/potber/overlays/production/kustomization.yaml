@@ -35,3 +35,6 @@ patches:
   - path: patch-potber-api-ingress.yaml
   - path: patch-potber-auth-ingress.yaml
   - path: patch-potber-client-ingress.yaml
+  - path: delete-potber-api-ingress.yaml
+  - path: delete-potber-auth-ingress.yaml
+  - path: delete-potber-client-ingress.yaml
