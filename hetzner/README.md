@@ -95,3 +95,7 @@ hetzner-k3s delete --config cluster.yaml
 ```
 
 > **Warning:** Deleting the cluster also removes all associated Hetzner resources (nodes, load balancers, networks).
+
+## Next step: Flux bootstrap
+
+Once the cluster is up, ingress-nginx is installed, and cert-manager is installed, continue with the Flux handoff guide in [`../kubernetes/README.md`](../kubernetes/README.md).

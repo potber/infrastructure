@@ -4,8 +4,6 @@ metadata:
   name: potber
   namespace: flux-system
 spec:
-  dependsOn:
-    - name: infrastructure
   interval: 10m0s
   retryInterval: 1m0s
   timeout: 10m0s
