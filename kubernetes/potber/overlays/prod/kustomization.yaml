@@ -14,6 +14,9 @@ configMapGenerator:
   - name: potber-client-config
     files:
       - injected-config.js=potber-client-config.js
+  - name: potber-client-test-config
+    files:
+      - injected-config.js=potber-client-test-config.js
   - name: imgpot-config
     envs:
       - imgpot.env
@@ -40,10 +43,13 @@ replicas:
     count: 1
   - name: potber-client
     count: 1
+  - name: potber-client-test
+    count: 1
   - name: imgpot
     count: 1
 patches:
   - path: patch-potber-api-ingress.yaml
   - path: patch-potber-auth-ingress.yaml
   - path: patch-potber-client-ingress.yaml
+  - path: patch-potber-client-test-ingress.yaml
   - path: patch-imgpot-ingress.yaml

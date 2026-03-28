@@ -5,3 +5,4 @@ resources:
   - potber-auth.yaml
   - imgpot.yaml
   - potber-client.yaml
+  - potber-client-test.yaml
