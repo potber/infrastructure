@@ -18,6 +18,9 @@ spec:
         app.kubernetes.io/component: web
         app.kubernetes.io/part-of: potber
     spec:
+      securityContext:
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
       # Uncomment this if the container image is private in GHCR.
       # imagePullSecrets:
       #   - name: ghcr-creds
@@ -25,6 +28,8 @@ spec:
         - name: potber-client-config
           configMap:
             name: potber-client-config
+        - name: potber-client-cache
+          emptyDir: {}
       containers:
         - name: potber-client
           image: ghcr.io/potber/potber-client:latest
@@ -36,6 +41,8 @@ spec:
             - name: potber-client-config
               mountPath: /usr/share/nginx/html/config
               readOnly: true
+            - name: potber-client-cache
+              mountPath: /var/cache/nginx
           startupProbe:
             httpGet:
               path: /healthz
