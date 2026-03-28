@@ -20,4 +20,3 @@ replicas:
     count: 1
 patches:
   - path: patch-imgpot-ingress.yaml
-  - path: delete-ingress.yaml
