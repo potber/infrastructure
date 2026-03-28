@@ -3,7 +3,6 @@ kind: Kustomization
 namespace: potber-prod
 resources:
   - ../../base
-  - ghcr-creds.secret.yaml
 configMapGenerator:
   - name: imgpot-config
     envs:
@@ -13,7 +12,7 @@ secretGenerator:
     envs:
       - imgpot.secret.env
 images:
-  - name: ghcr.io/herrkris/imgpot
+  - name: ghcr.io/potber/imgpot
     newTag: latest
 replicas:
   - name: imgpot

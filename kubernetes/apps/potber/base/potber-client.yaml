@@ -21,9 +21,6 @@ spec:
       securityContext:
         fsGroup: 1000
         fsGroupChangePolicy: OnRootMismatch
-      # Uncomment this if the container image is private in GHCR.
-      # imagePullSecrets:
-      #   - name: ghcr-creds
       volumes:
         - name: potber-client-config
           configMap:

@@ -18,11 +18,9 @@ spec:
         app.kubernetes.io/component: media
         app.kubernetes.io/part-of: potber
     spec:
-      imagePullSecrets:
-        - name: ghcr-creds
       containers:
         - name: imgpot
-          image: ghcr.io/herrkris/imgpot:latest
+          image: ghcr.io/potber/imgpot:latest
           imagePullPolicy: Always
           ports:
             - name: http

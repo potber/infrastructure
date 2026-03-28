@@ -128,7 +128,6 @@ These files are committed encrypted and decrypted by Flux in-cluster:
 - [`potber-api.secret.env`](./apps/potber/overlays/production/potber-api.secret.env)
 - [`potber-api.secret.env`](./apps/potber/overlays/test/potber-api.secret.env)
 - [`imgpot.secret.env`](./apps/imgpot/overlays/production/imgpot.secret.env)
-- [`ghcr-creds.secret.yaml`](./apps/imgpot/overlays/production/ghcr-creds.secret.yaml)
 
 To edit an encrypted file locally:
 

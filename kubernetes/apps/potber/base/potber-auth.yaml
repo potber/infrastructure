@@ -18,9 +18,6 @@ spec:
         app.kubernetes.io/component: auth
         app.kubernetes.io/part-of: potber
     spec:
-      # Uncomment this if the container image is private in GHCR.
-      # imagePullSecrets:
-      #   - name: ghcr-creds
       containers:
         - name: potber-auth
           image: ghcr.io/potber/potber-auth:latest
