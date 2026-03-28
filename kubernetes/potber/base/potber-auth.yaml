@@ -1,0 +1,113 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: potber-auth
+  labels:
+    app.kubernetes.io/name: potber-auth
+    app.kubernetes.io/component: auth
+    app.kubernetes.io/part-of: potber
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: potber-auth
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: potber-auth
+        app.kubernetes.io/component: auth
+        app.kubernetes.io/part-of: potber
+    spec:
+      # Uncomment this if the container image is private in GHCR.
+      # imagePullSecrets:
+      #   - name: ghcr-creds
+      containers:
+        - name: potber-auth
+          image: ghcr.io/potber/potber-auth:latest
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 3000
+          envFrom:
+            - configMapRef:
+                name: potber-auth-config
+          startupProbe:
+            httpGet:
+              path: /
+              port: http
+            failureThreshold: 30
+            periodSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            periodSeconds: 20
+            timeoutSeconds: 3
+            failureThreshold: 3
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 300m
+              memory: 256Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: potber-auth
+  labels:
+    app.kubernetes.io/name: potber-auth
+    app.kubernetes.io/component: auth
+    app.kubernetes.io/part-of: potber
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: potber-auth
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: potber-auth
+  labels:
+    app.kubernetes.io/name: potber-auth
+    app.kubernetes.io/component: auth
+    app.kubernetes.io/part-of: potber
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    kubernetes.io/tls-acme: "true"
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: auth.example.invalid
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: potber-auth
+                port:
+                  number: 80
+  tls:
+    - hosts:
+        - auth.example.invalid
+      secretName: auth.example.invalid-tls

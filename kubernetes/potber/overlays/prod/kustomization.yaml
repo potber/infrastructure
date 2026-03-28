@@ -1,0 +1,49 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: potber
+resources:
+  - ../../base
+  - namespace.yaml
+configMapGenerator:
+  - name: potber-api-config
+    envs:
+      - potber-api.env
+  - name: potber-auth-config
+    envs:
+      - potber-auth.env
+  - name: potber-client-config
+    files:
+      - injected-config.js=potber-client-config.js
+  - name: imgpot-config
+    envs:
+      - imgpot.env
+secretGenerator:
+  - name: potber-api-secret
+    envs:
+      - potber-api.secret.env
+  - name: imgpot-secret
+    envs:
+      - imgpot.secret.env
+images:
+  - name: ghcr.io/potber/potber-api
+    newTag: latest
+  - name: ghcr.io/potber/potber-auth
+    newTag: latest
+  - name: ghcr.io/potber/potber-client
+    newTag: latest
+  - name: ghcr.io/herrkris/imgpot
+    newTag: latest
+replicas:
+  - name: potber-api
+    count: 1
+  - name: potber-auth
+    count: 1
+  - name: potber-client
+    count: 1
+  - name: imgpot
+    count: 1
+patches:
+  - path: patch-potber-api-ingress.yaml
+  - path: patch-potber-auth-ingress.yaml
+  - path: patch-potber-client-ingress.yaml
+  - path: patch-imgpot-ingress.yaml

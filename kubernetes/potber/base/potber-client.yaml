@@ -1,0 +1,120 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: potber-client
+  labels:
+    app.kubernetes.io/name: potber-client
+    app.kubernetes.io/component: web
+    app.kubernetes.io/part-of: potber
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: potber-client
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: potber-client
+        app.kubernetes.io/component: web
+        app.kubernetes.io/part-of: potber
+    spec:
+      # Uncomment this if the container image is private in GHCR.
+      # imagePullSecrets:
+      #   - name: ghcr-creds
+      volumes:
+        - name: potber-client-config
+          configMap:
+            name: potber-client-config
+      containers:
+        - name: potber-client
+          image: ghcr.io/potber/potber-client:latest
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 8080
+          volumeMounts:
+            - name: potber-client-config
+              mountPath: /usr/share/nginx/html/config
+              readOnly: true
+          startupProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            failureThreshold: 30
+            periodSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 20
+            timeoutSeconds: 3
+            failureThreshold: 3
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            runAsUser: 1000
+            runAsGroup: 1000
+            capabilities:
+              drop:
+                - ALL
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: potber-client
+  labels:
+    app.kubernetes.io/name: potber-client
+    app.kubernetes.io/component: web
+    app.kubernetes.io/part-of: potber
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: potber-client
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: potber-client
+  labels:
+    app.kubernetes.io/name: potber-client
+    app.kubernetes.io/component: web
+    app.kubernetes.io/part-of: potber
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    kubernetes.io/tls-acme: "true"
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: potber-client.example.invalid
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: potber-client
+                port:
+                  number: 80
+  tls:
+    - hosts:
+        - potber-client.example.invalid
+      secretName: potber-client.example.invalid-tls

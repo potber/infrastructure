@@ -1,3 +1,8 @@
 kubeconfig
 .DS_Store
 *.env
+!kubernetes/**/*.env
+*.secret.env
+!kubernetes/**/*.secret.env
+*.agekey
+cluster.yaml

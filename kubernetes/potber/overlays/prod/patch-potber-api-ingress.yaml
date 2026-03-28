@@ -1,0 +1,20 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: potber-api
+spec:
+  rules:
+    - host: api.potber.de
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: potber-api
+                port:
+                  number: 80
+  tls:
+    - hosts:
+        - api.potber.de
+      secretName: api.potber.de-tls

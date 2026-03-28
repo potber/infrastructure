@@ -1,0 +1,6 @@
+creation_rules:
+  - path_regex: .*\.secret\.env$
+    age: age1v64geenru82d3f2fl534lsu8dwdqlvnx665gsx4yxq4e3cdkyyzq38kgd9
+  - path_regex: .*\.secret\.ya?ml$
+    encrypted_regex: ^(data|stringData)$
+    age: age1v64geenru82d3f2fl534lsu8dwdqlvnx665gsx4yxq4e3cdkyyzq38kgd9

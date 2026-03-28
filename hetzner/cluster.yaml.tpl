@@ -1,4 +1,4 @@
-hetzner_token: %env:<HETZNER_TOKEN>%
+hetzner_token: {{ .Env.HETZNER_TOKEN }}
 cluster_name: cluster
 kubeconfig_path: "./kubeconfig"
 k3s_version: v1.32.0+k3s1
