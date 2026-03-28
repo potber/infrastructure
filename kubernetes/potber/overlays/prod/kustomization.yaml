@@ -8,9 +8,15 @@ configMapGenerator:
   - name: potber-api-config
     envs:
       - potber-api.env
+  - name: potber-api-test-config
+    envs:
+      - potber-api-test.env
   - name: potber-auth-config
     envs:
       - potber-auth.env
+  - name: potber-auth-test-config
+    envs:
+      - potber-auth-test.env
   - name: potber-client-config
     files:
       - injected-config.js=potber-client-config.js
@@ -22,6 +28,9 @@ configMapGenerator:
       - imgpot.env
 secretGenerator:
   - name: potber-api-secret
+    envs:
+      - potber-api.secret.env
+  - name: potber-api-test-secret
     envs:
       - potber-api.secret.env
   - name: imgpot-secret
@@ -39,7 +48,11 @@ images:
 replicas:
   - name: potber-api
     count: 1
+  - name: potber-api-test
+    count: 1
   - name: potber-auth
+    count: 1
+  - name: potber-auth-test
     count: 1
   - name: potber-client
     count: 1
@@ -49,7 +62,9 @@ replicas:
     count: 1
 patches:
   - path: patch-potber-api-ingress.yaml
+  - path: patch-potber-api-test-ingress.yaml
   - path: patch-potber-auth-ingress.yaml
+  - path: patch-potber-auth-test-ingress.yaml
   - path: patch-potber-client-ingress.yaml
   - path: patch-potber-client-test-ingress.yaml
   - path: patch-imgpot-ingress.yaml
