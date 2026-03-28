@@ -28,4 +28,5 @@ spec:
     - hosts:
         - potber.de
         - www.potber.de
+        - test.potber.de
       secretName: potber.de-tls
