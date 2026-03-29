@@ -1,0 +1,135 @@
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImageRepository
+metadata:
+  name: potber-api-prod
+  namespace: flux-system
+spec:
+  image: ghcr.io/potber/potber-api
+  interval: 5m0s
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImageRepository
+metadata:
+  name: potber-auth-prod
+  namespace: flux-system
+spec:
+  image: ghcr.io/potber/potber-auth
+  interval: 5m0s
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImageRepository
+metadata:
+  name: potber-client-prod
+  namespace: flux-system
+spec:
+  image: ghcr.io/potber/potber-client
+  interval: 5m0s
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImageRepository
+metadata:
+  name: imgpot-prod
+  namespace: flux-system
+spec:
+  image: ghcr.io/potber/imgpot
+  interval: 5m0s
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImagePolicy
+metadata:
+  name: potber-api-prod
+  namespace: flux-system
+spec:
+  imageRepositoryRef:
+    name: potber-api-prod
+  policy:
+    semver:
+      range: ">=0.0.0"
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImagePolicy
+metadata:
+  name: potber-auth-prod
+  namespace: flux-system
+spec:
+  imageRepositoryRef:
+    name: potber-auth-prod
+  policy:
+    semver:
+      range: ">=0.0.0"
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImagePolicy
+metadata:
+  name: potber-client-prod
+  namespace: flux-system
+spec:
+  imageRepositoryRef:
+    name: potber-client-prod
+  policy:
+    semver:
+      range: ">=0.0.0"
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImagePolicy
+metadata:
+  name: imgpot-prod
+  namespace: flux-system
+spec:
+  imageRepositoryRef:
+    name: imgpot-prod
+  policy:
+    semver:
+      range: ">=0.0.0"
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImageUpdateAutomation
+metadata:
+  name: potber-prod
+  namespace: flux-system
+spec:
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  interval: 5m0s
+  git:
+    checkout:
+      ref:
+        branch: main
+    commit:
+      author:
+        email: fluxcdbot@users.noreply.github.com
+        name: fluxcdbot
+      messageTemplate: |
+        Update production potber images
+    push:
+      branch: main
+  update:
+    path: ./kubernetes/apps/potber/overlays/production
+    strategy: Setters
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImageUpdateAutomation
+metadata:
+  name: imgpot-prod
+  namespace: flux-system
+spec:
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  interval: 5m0s
+  git:
+    checkout:
+      ref:
+        branch: main
+    commit:
+      author:
+        email: fluxcdbot@users.noreply.github.com
+        name: fluxcdbot
+      messageTemplate: |
+        Update production imgpot image
+    push:
+      branch: main
+  update:
+    path: ./kubernetes/apps/imgpot/overlays/production
+    strategy: Setters

@@ -122,6 +122,15 @@ flux reconcile source git flux-system
 flux reconcile kustomization potber --with-source
 ```
 
+## Image updates
+
+Production follows semver release tags from GHCR automatically. Flux watches the registries, updates the pinned tags in Git, and rolls out the new version after a tagged release image is published.
+
+- [`./apps/potber/overlays/production/kustomization.yaml`](./apps/potber/overlays/production/kustomization.yaml)
+- [`./apps/imgpot/overlays/production/kustomization.yaml`](./apps/imgpot/overlays/production/kustomization.yaml)
+
+The test environment is different: it tracks the newest `main-...` image tag for `potber-client`, `potber-api`, and `potber-auth`.
+
 ## Secrets
 
 These files are committed encrypted and decrypted by Flux in-cluster:

@@ -13,7 +13,7 @@ secretGenerator:
       - imgpot.secret.env
 images:
   - name: ghcr.io/potber/imgpot
-    newTag: 1.0.0
+    newTag: 1.0.0 # {"$imagepolicy": "flux-system:imgpot-prod:tag"}
 replicas:
   - name: imgpot
     count: 1
