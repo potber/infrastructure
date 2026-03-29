@@ -7,7 +7,8 @@ After the Hetzner cluster is created and reachable with `kubectl`, the remaining
 1. install the shared cluster components from the Hetzner guide
 2. bootstrap Flux against this repository
 3. restore the SOPS key so Flux can decrypt app secrets
-4. verify the `potber` reconciliations
+4. verify the core Flux reconciliations
+5. if previews are needed, finish the wildcard preview prerequisites
 
 ## What Flux manages here
 
@@ -109,6 +110,37 @@ You should see:
 - production workloads in `potber-prod`
 - test workloads in `potber-test`
 
+## 5. Optional: enable pull request previews
+
+Preview environments live under hosts like `https://pr-32.preview.potber.de` and are deployed into the `potber-previews` namespace.
+
+Before enabling them, complete the preview wildcard certificate steps in [`../hetzner/README.md`](../hetzner/README.md):
+
+- wildcard DNS for `*.preview.potber.de`
+- `cloudflare-preview-api-token-secret` in `cert-manager`
+- `ClusterIssuer/letsencrypt-preview-cloudflare-dns01`
+
+Once those are in place, reconcile the preview tree:
+
+```bash
+flux reconcile source git flux-system
+flux reconcile kustomization previews --with-source
+```
+
+Expected checks:
+
+```bash
+kubectl -n flux-system get kustomizations
+kubectl -n potber-previews get certificate
+kubectl -n potber-previews get deploy,svc,ingress
+```
+
+You should see:
+
+- `previews` with `READY=True`
+- `preview-potber-de-wildcard` with `READY=True`
+- preview workloads only when an open pull request has generated them
+
 ## Day 2 workflow
 
 For normal changes:
@@ -124,6 +156,13 @@ flux reconcile source git flux-system
 flux reconcile kustomization potber --with-source
 ```
 
+For preview changes:
+
+- do not edit [`./previews/generated`](./previews/generated) by hand
+- the `potber-client` pull request workflow creates `pr-<number>.yaml` files there
+- Flux applies those manifests into `potber-previews`
+- when the pull request closes, the workflow removes the generated manifest again
+
 ## Image updates
 
 Production follows semver release tags from GHCR automatically. Flux watches the registries, updates the pinned tags in Git, and rolls out the new version after a tagged release image is published.
@@ -133,13 +172,7 @@ Production follows semver release tags from GHCR automatically. Flux watches the
 
 The test environment is different: it tracks the newest `main-...` image tag for `potber-client`, `potber-api`, and `potber-auth`.
 
-Preview environments are separate again: the pull request workflow writes generated manifests under [`./previews/generated`](./previews/generated), and Flux deploys them into `potber-previews`.
-
-The preview Flux Kustomization starts suspended by default. After the wildcard DNS and preview DNS-01 issuer are ready, resume it with:
-
-```bash
-flux resume kustomization previews -n flux-system
-```
+Preview environments are separate again: the `potber-client` pull request workflow builds `pr-<number>-<sha>` images, writes generated manifests under [`./previews/generated`](./previews/generated), and Flux deploys them into `potber-previews`.
 
 ## Secrets
 
