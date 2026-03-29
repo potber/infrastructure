@@ -4,7 +4,6 @@ metadata:
   name: previews
   namespace: flux-system
 spec:
-  suspend: true
   interval: 1m0s
   retryInterval: 1m0s
   timeout: 10m0s
