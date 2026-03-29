@@ -1,0 +1,144 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: potber-client-pr-49-config
+  namespace: potber-previews
+  labels:
+    app.kubernetes.io/name: potber-client-pr-49
+    app.kubernetes.io/component: web
+    app.kubernetes.io/part-of: potber-preview
+data:
+  injected-config.js: |
+    window.APP = {
+      HOSTNAME: 'pr-49.preview.potber.de',
+      API_URL: 'https://test-api.potber.de',
+      AUTH_ISSUER_URL: 'https://test-auth.potber.de',
+      AUTH_CLIENT_ID: '1af5d165-2357-4bae-817d-a1d7f471ef67',
+      MEME_HOST_URL: 'https://pr-49.preview.potber.de'
+    };
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: potber-client-pr-49
+  namespace: potber-previews
+  labels:
+    app.kubernetes.io/name: potber-client-pr-49
+    app.kubernetes.io/component: web
+    app.kubernetes.io/part-of: potber-preview
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: potber-client-pr-49
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: potber-client-pr-49
+        app.kubernetes.io/component: web
+        app.kubernetes.io/part-of: potber-preview
+    spec:
+      securityContext:
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+      volumes:
+        - name: potber-client-config
+          configMap:
+            name: potber-client-pr-49-config
+        - name: potber-client-cache
+          emptyDir: {}
+      containers:
+        - name: potber-client
+          image: ghcr.io/potber/potber-client:pr-49-88bc5dbd197ca7130f0506c1ee3debaf35cf9d7c
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 8080
+          volumeMounts:
+            - name: potber-client-config
+              mountPath: /usr/share/nginx/html/config
+              readOnly: true
+            - name: potber-client-cache
+              mountPath: /var/cache/nginx
+          startupProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            failureThreshold: 30
+            periodSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 20
+            timeoutSeconds: 3
+            failureThreshold: 3
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            runAsUser: 1000
+            runAsGroup: 1000
+            capabilities:
+              drop:
+                - ALL
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: potber-client-pr-49
+  namespace: potber-previews
+  labels:
+    app.kubernetes.io/name: potber-client-pr-49
+    app.kubernetes.io/component: web
+    app.kubernetes.io/part-of: potber-preview
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: potber-client-pr-49
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: potber-client-pr-49
+  namespace: potber-previews
+  labels:
+    app.kubernetes.io/name: potber-client-pr-49
+    app.kubernetes.io/component: web
+    app.kubernetes.io/part-of: potber-preview
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: pr-49.preview.potber.de
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: potber-client-pr-49
+                port:
+                  number: 80
+  tls:
+    - hosts:
+        - pr-49.preview.potber.de
+      secretName: preview-potber-de-wildcard-tls
