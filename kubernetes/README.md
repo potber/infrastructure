@@ -107,33 +107,13 @@ You should see:
 - production workloads in `potber-prod`
 - test workloads in `potber-test`
 
-## Day 2 workflow
+## Day 2 Day workflow
 
 For normal changes:
 
 1. edit manifests under [`./apps`](./apps)
 2. commit and push to `main`
 3. Flux applies the change automatically
-
-## Image updates
-
-Production should stay pinned to explicit release tags. When an app repository publishes a production release image, the follow-up workflow should update these files in this repo:
-
-- `potber-client`, `potber-api`, `potber-auth`:
-  [`./apps/potber/overlays/production/kustomization.yaml`](./apps/potber/overlays/production/kustomization.yaml)
-- `imgpot`:
-  [`./apps/imgpot/overlays/production/kustomization.yaml`](./apps/imgpot/overlays/production/kustomization.yaml)
-
-The test environment is different: Flux image automation tracks the newest `main-...` image tag for `potber-client`, `potber-api`, and `potber-auth`, and commits the updated tags back to:
-
-- [`./apps/potber/overlays/test/kustomization.yaml`](./apps/potber/overlays/test/kustomization.yaml)
-
-Current pinned versions:
-
-- `potber-client`: `1.28.0`
-- `potber-api`: `3.3.0`
-- `potber-auth`: `1.6.0`
-- `imgpot`: `1.0.0`
 
 To force an immediate sync:
 
