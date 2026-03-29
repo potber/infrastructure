@@ -90,9 +90,6 @@ spec:
         name: fluxcdbot
       messageTemplate: |
         Update test images
-
-        Automation:
-        {{range .Updated.Images}}{{println .}}{{end}}
     push:
       branch: main
   update:
