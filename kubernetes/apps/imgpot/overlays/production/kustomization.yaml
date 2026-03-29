@@ -13,7 +13,7 @@ secretGenerator:
       - imgpot.secret.env
 images:
   - name: ghcr.io/potber/imgpot
-    newTag: latest
+    newTag: 1.0.0
 replicas:
   - name: imgpot
     count: 1

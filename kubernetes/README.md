@@ -114,6 +114,26 @@ For normal changes:
 2. commit and push to `main`
 3. Flux applies the change automatically
 
+## Image updates
+
+Production should use immutable release tags instead of `latest`.
+
+When an app repository publishes a new release image, the follow-up workflow should update these files in this repo:
+
+- `potber-client`, `potber-api`, `potber-auth`:
+  [`./apps/potber/overlays/production/kustomization.yaml`](./apps/potber/overlays/production/kustomization.yaml)
+- `potber-client`, `potber-api`, `potber-auth` test environment:
+  [`./apps/potber/overlays/test/kustomization.yaml`](./apps/potber/overlays/test/kustomization.yaml)
+- `imgpot`:
+  [`./apps/imgpot/overlays/production/kustomization.yaml`](./apps/imgpot/overlays/production/kustomization.yaml)
+
+Current pinned versions:
+
+- `potber-client`: `1.28.0`
+- `potber-api`: `3.3.0`
+- `potber-auth`: `1.6.0`
+- `imgpot`: `1.0.0`
+
 To force an immediate sync:
 
 ```bash

@@ -19,11 +19,11 @@ secretGenerator:
       - potber-api.secret.env
 images:
   - name: ghcr.io/potber/potber-api
-    newTag: latest
+    newTag: 3.3.0
   - name: ghcr.io/potber/potber-auth
-    newTag: latest
+    newTag: 1.6.0
   - name: ghcr.io/potber/potber-client
-    newTag: latest
+    newTag: 1.28.0
 replicas:
   - name: potber-api
     count: 1
