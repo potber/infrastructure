@@ -88,6 +88,39 @@ gomplate -f ./lets-encrypt/cert-manager.yaml.tpl -o ./lets-encrypt/cert-manager.
 kubectl apply -f ./lets-encrypt/cert-manager.yaml
 ```
 
+## Optional: preview wildcard certificates
+
+Preview environments under `pr-<number>.preview.potber.de` use a wildcard certificate, which requires DNS-01.
+
+**1. Create wildcard DNS**
+
+Create a wildcard DNS record for:
+
+- `*.preview.potber.de`
+
+Point it at the Kubernetes ingress load balancer.
+
+**2. Create the Cloudflare token secret**
+
+The token needs permission to edit DNS records for the `potber.de` zone.
+
+```bash
+kubectl create secret generic cloudflare-preview-api-token-secret \
+  --namespace cert-manager \
+  --from-literal=api-token=<cloudflare-api-token> \
+  --dry-run=client -o yaml | kubectl apply -f -
+```
+
+**3. Apply the preview DNS-01 issuer**
+
+```bash
+export CLUSTER_ADMIN_EMAIL=<email-address>
+gomplate -f ./lets-encrypt/cert-manager-preview-cloudflare-dns01.yaml.tpl -o ./lets-encrypt/cert-manager-preview-cloudflare-dns01.yaml
+kubectl apply -f ./lets-encrypt/cert-manager-preview-cloudflare-dns01.yaml
+```
+
+The wildcard certificate itself is managed by Flux from [`../kubernetes/previews/wildcard-certificate.yaml`](../kubernetes/previews/wildcard-certificate.yaml).
+
 ## Delete the cluster
 
 ```bash

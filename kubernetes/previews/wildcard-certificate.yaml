@@ -1,0 +1,13 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: preview-potber-de-wildcard
+  namespace: potber-previews
+spec:
+  secretName: preview-potber-de-wildcard-tls
+  issuerRef:
+    group: cert-manager.io
+    kind: ClusterIssuer
+    name: letsencrypt-preview-cloudflare-dns01
+  dnsNames:
+    - "*.preview.potber.de"

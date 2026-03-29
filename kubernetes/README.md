@@ -13,11 +13,13 @@ After the Hetzner cluster is created and reachable with `kubectl`, the remaining
 
 - [`flux-system/`](./clusters/production/flux-system) contains the Flux bootstrap manifests
 - [`apps.yaml`](./clusters/production/apps.yaml) reconciles `./kubernetes/apps`
+- [`previews.yaml`](./clusters/production/previews.yaml) reconciles `./kubernetes/previews`
 
 The current app layout is:
 
 - `potber-prod` namespace for production apps
 - `potber-test` namespace for test apps
+- `potber-previews` namespace for pull request previews
 - `imgpot` lives in `potber-prod`
 
 ## Prerequisites
@@ -107,7 +109,7 @@ You should see:
 - production workloads in `potber-prod`
 - test workloads in `potber-test`
 
-## Day 2 Day workflow
+## Day 2 workflow
 
 For normal changes:
 
@@ -130,6 +132,14 @@ Production follows semver release tags from GHCR automatically. Flux watches the
 - [`./apps/imgpot/overlays/production/kustomization.yaml`](./apps/imgpot/overlays/production/kustomization.yaml)
 
 The test environment is different: it tracks the newest `main-...` image tag for `potber-client`, `potber-api`, and `potber-auth`.
+
+Preview environments are separate again: the pull request workflow writes generated manifests under [`./previews/generated`](./previews/generated), and Flux deploys them into `potber-previews`.
+
+The preview Flux Kustomization starts suspended by default. After the wildcard DNS and preview DNS-01 issuer are ready, resume it with:
+
+```bash
+flux resume kustomization previews -n flux-system
+```
 
 ## Secrets
 
