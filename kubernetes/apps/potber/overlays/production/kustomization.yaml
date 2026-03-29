@@ -23,7 +23,7 @@ images:
   - name: ghcr.io/potber/potber-auth
     newTag: 1.6.0 # {"$imagepolicy": "flux-system:potber-auth-prod:tag"}
   - name: ghcr.io/potber/potber-client
-    newTag: 1.28.0 # {"$imagepolicy": "flux-system:potber-client-prod:tag"}
+    newTag: 1.28.1 # {"$imagepolicy": "flux-system:potber-client-prod:tag"}
 replicas:
   - name: potber-api
     count: 1
