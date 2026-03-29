@@ -3,7 +3,7 @@ kind: Ingress
 metadata:
   name: potber-client
   annotations:
-    cert-manager.io/cluster-issuer: letsencrypt-prod-cloudflare-dns01
+    cert-manager.io/cluster-issuer: letsencrypt-prod
 spec:
   rules:
     - host: potber.de
