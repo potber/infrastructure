@@ -49,7 +49,7 @@ spec:
           emptyDir: {}
       containers:
         - name: potber-client
-          image: ghcr.io/potber/potber-client:pr-50-eb92ee27646e9316f7ec22195a2836958dd22498
+          image: ghcr.io/potber/potber-client:pr-50-78ad72eb996eea89c26f944dc98330c228d04180
           imagePullPolicy: Always
           ports:
             - name: http
