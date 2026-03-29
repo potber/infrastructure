@@ -1,0 +1,100 @@
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImageRepository
+metadata:
+  name: potber-api-test
+  namespace: flux-system
+spec:
+  image: ghcr.io/potber/potber-api
+  interval: 5m0s
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImageRepository
+metadata:
+  name: potber-auth-test
+  namespace: flux-system
+spec:
+  image: ghcr.io/potber/potber-auth
+  interval: 5m0s
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImageRepository
+metadata:
+  name: potber-client-test
+  namespace: flux-system
+spec:
+  image: ghcr.io/potber/potber-client
+  interval: 5m0s
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImagePolicy
+metadata:
+  name: potber-api-test
+  namespace: flux-system
+spec:
+  filterTags:
+    pattern: ^main-(?P<ts>[0-9]{8}-[0-9]{6})-[a-f0-9]{40}$
+    extract: $ts
+  imageRepositoryRef:
+    name: potber-api-test
+  policy:
+    alphabetical:
+      order: asc
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImagePolicy
+metadata:
+  name: potber-auth-test
+  namespace: flux-system
+spec:
+  filterTags:
+    pattern: ^main-(?P<ts>[0-9]{8}-[0-9]{6})-[a-f0-9]{40}$
+    extract: $ts
+  imageRepositoryRef:
+    name: potber-auth-test
+  policy:
+    alphabetical:
+      order: asc
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImagePolicy
+metadata:
+  name: potber-client-test
+  namespace: flux-system
+spec:
+  filterTags:
+    pattern: ^main-(?P<ts>[0-9]{8}-[0-9]{6})-[a-f0-9]{40}$
+    extract: $ts
+  imageRepositoryRef:
+    name: potber-client-test
+  policy:
+    alphabetical:
+      order: asc
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImageUpdateAutomation
+metadata:
+  name: potber-test
+  namespace: flux-system
+spec:
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  interval: 5m0s
+  git:
+    checkout:
+      ref:
+        branch: main
+    commit:
+      author:
+        email: fluxcdbot@users.noreply.github.com
+        name: fluxcdbot
+      messageTemplate: |
+        Update test images
+
+        Automation:
+        {{range .Updated.Images}}{{println .}}{{end}}
+    push:
+      branch: main
+  update:
+    path: ./kubernetes/apps/potber/overlays/test
+    strategy: Setters

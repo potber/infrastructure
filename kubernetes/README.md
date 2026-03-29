@@ -51,6 +51,7 @@ flux bootstrap github \
   --owner=potber \
   --repository=infrastructure \
   --branch=main \
+  --components-extra=image-reflector-controller,image-automation-controller \
   --path=kubernetes/clusters/production
 ```
 
@@ -116,16 +117,16 @@ For normal changes:
 
 ## Image updates
 
-Production should use immutable release tags instead of `latest`.
-
-When an app repository publishes a new release image, the follow-up workflow should update these files in this repo:
+Production should stay pinned to explicit release tags. When an app repository publishes a production release image, the follow-up workflow should update these files in this repo:
 
 - `potber-client`, `potber-api`, `potber-auth`:
   [`./apps/potber/overlays/production/kustomization.yaml`](./apps/potber/overlays/production/kustomization.yaml)
-- `potber-client`, `potber-api`, `potber-auth` test environment:
-  [`./apps/potber/overlays/test/kustomization.yaml`](./apps/potber/overlays/test/kustomization.yaml)
 - `imgpot`:
   [`./apps/imgpot/overlays/production/kustomization.yaml`](./apps/imgpot/overlays/production/kustomization.yaml)
+
+The test environment is different: Flux image automation tracks the newest `main-...` image tag for `potber-client`, `potber-api`, and `potber-auth`, and commits the updated tags back to:
+
+- [`./apps/potber/overlays/test/kustomization.yaml`](./apps/potber/overlays/test/kustomization.yaml)
 
 Current pinned versions:
 
