@@ -19,7 +19,7 @@ secretGenerator:
       - potber-api.secret.env
 images:
   - name: ghcr.io/potber/potber-api
-    newTag: 3.3.0 # {"$imagepolicy": "flux-system:potber-api-prod:tag"}
+    newTag: 3.4.0 # {"$imagepolicy": "flux-system:potber-api-prod:tag"}
   - name: ghcr.io/potber/potber-auth
     newTag: 1.6.0 # {"$imagepolicy": "flux-system:potber-auth-prod:tag"}
   - name: ghcr.io/potber/potber-client
