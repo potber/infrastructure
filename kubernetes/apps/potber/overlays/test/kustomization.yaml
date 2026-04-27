@@ -23,7 +23,7 @@ images:
   - name: ghcr.io/potber/potber-auth
     newTag: main-20260412-061142-cf9a1827760ff112650c1d4aa9678bcd6501031f # {"$imagepolicy": "flux-system:potber-auth-test:tag"}
   - name: ghcr.io/potber/potber-client
-    newTag: main-20260405-100718-e218d21fa98c6cf9f137fc2a95ae6a2ed817eb3b # {"$imagepolicy": "flux-system:potber-client-test:tag"}
+    newTag: main-20260427-173830-c5702a0832d42b39bde4cb091530287382d76aef # {"$imagepolicy": "flux-system:potber-client-test:tag"}
 replicas:
   - name: potber-api
     count: 1
