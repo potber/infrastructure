@@ -100,23 +100,39 @@ Create a wildcard DNS record for:
 
 Point it at the Kubernetes ingress load balancer.
 
-**2. Create the Cloudflare token secret**
+**2. Provide a Hetzner DNS API token**
 
-The token needs permission to edit DNS records for the `potber.de` zone.
+The `HETZNER_TOKEN` used to create the cluster can be reused when it has read/write access to the Hetzner Console project that contains the `potber.de` DNS zone. Alternatively, export a separate read/write token as `HETZNER_TOKEN` before creating the Kubernetes secret.
+
+**3. Install the Hetzner DNS webhook**
+
+cert-manager uses Hetzner's official webhook to create the DNS-01 challenge records.
 
 ```bash
-kubectl create secret generic cloudflare-preview-api-token-secret \
+helm repo add hcloud https://charts.hetzner.cloud
+helm repo update hcloud
+
+helm upgrade --install \
   --namespace cert-manager \
-  --from-literal=api-token=<cloudflare-api-token> \
+  --version 0.7.0 \
+  cert-manager-webhook-hetzner hcloud/cert-manager-webhook-hetzner
+```
+
+**4. Create the Hetzner token secret**
+
+```bash
+kubectl create secret generic hetzner-dns-api-token-secret \
+  --namespace cert-manager \
+  --from-literal=token="${HETZNER_TOKEN}" \
   --dry-run=client -o yaml | kubectl apply -f -
 ```
 
-**3. Apply the preview DNS-01 issuer**
+**5. Apply the preview DNS-01 issuer**
 
 ```bash
 export CLUSTER_ADMIN_EMAIL=<email-address>
-gomplate -f ./lets-encrypt/cert-manager-preview-cloudflare-dns01.yaml.tpl -o ./lets-encrypt/cert-manager-preview-cloudflare-dns01.yaml
-kubectl apply -f ./lets-encrypt/cert-manager-preview-cloudflare-dns01.yaml
+gomplate -f ./lets-encrypt/cert-manager-preview-hetzner-dns01.yaml.tpl -o ./lets-encrypt/cert-manager-preview-hetzner-dns01.yaml
+kubectl apply -f ./lets-encrypt/cert-manager-preview-hetzner-dns01.yaml
 ```
 
 The wildcard certificate itself is managed by Flux from [`../kubernetes/previews/wildcard-certificate.yaml`](../kubernetes/previews/wildcard-certificate.yaml).

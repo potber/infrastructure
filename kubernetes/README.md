@@ -117,8 +117,9 @@ Preview environments live under hosts like `https://pr-32.preview.potber.de` and
 Before enabling them, complete the preview wildcard certificate steps in [`../hetzner/README.md`](../hetzner/README.md):
 
 - wildcard DNS for `*.preview.potber.de`
-- `cloudflare-preview-api-token-secret` in `cert-manager`
-- `ClusterIssuer/letsencrypt-preview-cloudflare-dns01`
+- the official Hetzner cert-manager DNS webhook
+- `hetzner-dns-api-token-secret` in `cert-manager`
+- `ClusterIssuer/letsencrypt-preview-hetzner-dns01`
 
 Once those are in place, reconcile the preview tree:
 
