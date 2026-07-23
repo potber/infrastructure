@@ -5,3 +5,5 @@ resources:
   - previews.yaml
   - production-image-automation.yaml
   - test-image-automation.yaml
+  - vpa-system.yaml
+  - vpa-recommendations.yaml
