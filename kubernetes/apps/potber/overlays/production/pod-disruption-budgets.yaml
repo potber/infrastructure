@@ -1,0 +1,41 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: potber-api
+  labels:
+    app.kubernetes.io/name: potber-api
+    app.kubernetes.io/component: api
+    app.kubernetes.io/part-of: potber
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: potber-api
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: potber-auth
+  labels:
+    app.kubernetes.io/name: potber-auth
+    app.kubernetes.io/component: auth
+    app.kubernetes.io/part-of: potber
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: potber-auth
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: potber-client
+  labels:
+    app.kubernetes.io/name: potber-client
+    app.kubernetes.io/component: web
+    app.kubernetes.io/part-of: potber
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: potber-client

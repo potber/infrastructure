@@ -1,0 +1,13 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: imgpot
+  labels:
+    app.kubernetes.io/name: imgpot
+    app.kubernetes.io/component: media
+    app.kubernetes.io/part-of: potber
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: imgpot

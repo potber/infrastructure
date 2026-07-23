@@ -3,6 +3,7 @@ kind: Kustomization
 namespace: potber-prod
 resources:
   - ../../base
+  - pod-disruption-budget.yaml
 configMapGenerator:
   - name: imgpot-config
     envs:

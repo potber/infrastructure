@@ -3,6 +3,7 @@ kind: Kustomization
 namespace: potber-prod
 resources:
   - ../../base
+  - pod-disruption-budgets.yaml
 configMapGenerator:
   - name: potber-api-config
     envs:
