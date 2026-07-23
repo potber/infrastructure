@@ -16,6 +16,6 @@ images:
     newTag: 1.1.1 # {"$imagepolicy": "flux-system:imgpot-prod:tag"}
 replicas:
   - name: imgpot
-    count: 1
+    count: 2
 patches:
   - path: patch-imgpot-ingress.yaml

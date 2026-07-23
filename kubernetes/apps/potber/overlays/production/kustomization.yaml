@@ -26,11 +26,11 @@ images:
     newTag: 1.29.1 # {"$imagepolicy": "flux-system:potber-client-prod:tag"}
 replicas:
   - name: potber-api
-    count: 1
+    count: 2
   - name: potber-auth
-    count: 1
+    count: 2
   - name: potber-client
-    count: 1
+    count: 2
 patches:
   - path: patch-potber-api-ingress.yaml
   - path: patch-potber-auth-ingress.yaml

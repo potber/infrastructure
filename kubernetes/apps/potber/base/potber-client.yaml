@@ -18,6 +18,13 @@ spec:
         app.kubernetes.io/component: web
         app.kubernetes.io/part-of: potber
     spec:
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: DoNotSchedule
+          labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: potber-client
       securityContext:
         fsGroup: 1000
         fsGroupChangePolicy: OnRootMismatch
