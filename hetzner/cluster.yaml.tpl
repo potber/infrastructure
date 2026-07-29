@@ -31,5 +31,5 @@ masters_pool:
 worker_node_pools:
 - name: workers
   instance_type: cx23
-  instance_count: 3
+  instance_count: 2
   location: nbg1
