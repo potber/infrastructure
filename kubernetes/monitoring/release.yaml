@@ -37,6 +37,14 @@ spec:
           url: https://fleet-management-prod-011.grafana.net
           auth:
             username: "1761035"
+        alloy:
+          extraEnv:
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+          extraArgs:
+            - --cluster.advertise-address=$(POD_IP):12345
     collectors:
       alloy-daemon:
         presets:
