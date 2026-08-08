@@ -14,6 +14,7 @@ After the Hetzner cluster is created and reachable with `kubectl`, the remaining
 
 - [`flux-system/`](./clusters/production/flux-system) contains the Flux bootstrap manifests
 - [`apps.yaml`](./clusters/production/apps.yaml) reconciles `./kubernetes/apps`
+- [`monitoring.yaml`](./clusters/production/monitoring.yaml) reconciles `./kubernetes/monitoring`
 - [`previews.yaml`](./clusters/production/previews.yaml) reconciles `./kubernetes/previews`
 
 The current app layout is:
@@ -21,6 +22,7 @@ The current app layout is:
 - `potber-prod` namespace for production apps
 - `potber-test` namespace for test apps
 - `potber-previews` namespace for pull request previews
+- `monitoring` namespace for Grafana Cloud Kubernetes Monitoring
 - `imgpot` lives in `potber-prod`
 
 ## Prerequisites
@@ -92,6 +94,7 @@ flux check
 
 flux reconcile source git flux-system
 flux reconcile kustomization potber --with-source
+flux reconcile kustomization monitoring --with-source
 ```
 
 Expected checks:
@@ -101,12 +104,15 @@ kubectl -n flux-system get kustomizations
 kubectl get namespaces
 kubectl -n potber-prod get deploy,svc,ingress
 kubectl -n potber-test get deploy,svc,ingress
+kubectl -n monitoring get helmrelease,alloy,pods
 ```
 
 You should see:
 
 - `flux-system`, and `potber` with `READY=True`
+- `monitoring` with `READY=True`
 - `potber-prod` and `potber-test` namespaces
+- Grafana Alloy and its supporting telemetry services in `monitoring`
 - production workloads in `potber-prod`
 - test workloads in `potber-test`
 
@@ -182,6 +188,7 @@ These files are committed encrypted and decrypted by Flux in-cluster:
 - [`potber-api.secret.env`](./apps/potber/overlays/production/potber-api.secret.env)
 - [`potber-api.secret.env`](./apps/potber/overlays/test/potber-api.secret.env)
 - [`imgpot.secret.env`](./apps/imgpot/overlays/production/imgpot.secret.env)
+- [`grafana-cloud-fleet.secret.yaml`](./monitoring/grafana-cloud-fleet.secret.yaml)
 
 To edit an encrypted file locally:
 
