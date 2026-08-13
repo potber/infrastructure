@@ -190,6 +190,12 @@ These files are committed encrypted and decrypted by Flux in-cluster:
 - [`imgpot.secret.env`](./apps/imgpot/overlays/production/imgpot.secret.env)
 - [`grafana-cloud-fleet.secret.yaml`](./monitoring/grafana-cloud-fleet.secret.yaml)
 
+The Potber API secret files contain `AUTH_JWT_SECRET` and the remote
+user-configuration storage credentials `USER_CONFIG_DATABASE_URL` and
+`USER_CONFIG_DATABASE_AUTH_TOKEN`. The storage credentials currently point to
+the same Bunny Database used by imgpot; keep the variable names service-specific
+when copying or rotating the shared values.
+
 To edit an encrypted file locally:
 
 ```bash
