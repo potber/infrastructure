@@ -47,6 +47,14 @@ spec:
             - --cluster.advertise-address=$(POD_IP):12345
     collectors:
       alloy-daemon:
+        alloy:
+          resources:
+            requests:
+              cpu: 100m
+              memory: 512Mi
+            limits:
+              cpu: "1"
+              memory: 1Gi
         presets:
           - small
           - root
