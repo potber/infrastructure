@@ -43,6 +43,8 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: status.podIP
+            - name: OTEL_EBPF_BPF_CONTEXT_PROPAGATION
+              value: disabled
           extraArgs:
             - --cluster.advertise-address=$(POD_IP):12345
     collectors:
