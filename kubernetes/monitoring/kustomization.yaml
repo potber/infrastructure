@@ -4,4 +4,3 @@ resources:
   - namespace.yaml
   - grafana-cloud-fleet.secret.yaml
   - repository.yaml
-  - release.yaml
