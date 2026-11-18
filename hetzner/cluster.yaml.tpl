@@ -7,14 +7,18 @@ networking:
   ssh:
     port: 22
     use_agent: false
-    use_private_ip: false
+    # Administrative access uses the Tailscale subnet route via cluster-master1.
+    # Tailscale must be connected before running hetzner-k3s commands.
+    use_private_ip: true
     public_key_path: "~/.ssh/id_hetzner_cluster.pub"
     private_key_path: "~/.ssh/id_hetzner_cluster"
   allowed_networks:
+    # Public management access is closed. Keep cluster administration on the
+    # Hetzner private network reached through Tailscale.
     ssh:
-      - 0.0.0.0/0
+      - 10.0.0.0/16
     api:
-      - 0.0.0.0/0
+      - 10.0.0.0/16
 
 addons:
   metrics_server:

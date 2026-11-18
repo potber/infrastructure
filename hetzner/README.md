@@ -7,6 +7,7 @@ K3s cluster on Hetzner Cloud managed via [hetzner-k3s](https://vitobotta.github.
 - [hetzner-k3s](https://vitobotta.github.io/hetzner-k3s/Installation/) installed
 - [kubectl](https://kubernetes.io/docs/tasks/tools/#kubectl) installed
 - [Helm](https://helm.sh/docs/intro/install/) installed
+- [Tailscale](https://tailscale.com/download) installed and connected
 - Hetzner Cloud API token
 - SSH key pair at `~/.ssh/id_hetzner_cluster` / `~/.ssh/id_hetzner_cluster.pub`
 
@@ -26,12 +27,32 @@ hetzner-k3s create --config cluster.yaml
 
 ## Access the cluster
 
-The `kubeconfig` file is written to this directory after creation. Export it to use `kubectl`:
+Public SSH and Kubernetes API access are closed. Connect Tailscale before using
+`kubectl`, SSH, or `hetzner-k3s`. The control-plane node advertises the Hetzner
+private network `10.0.0.0/16` as a Tailscale subnet route.
+
+The `kubeconfig` file uses the private API endpoint `https://10.0.0.2:6443`:
 
 ```bash
+tailscale status
 export KUBECONFIG=./kubeconfig
 kubectl get nodes
 ```
+
+Node SSH access also uses private addresses:
+
+```bash
+ssh -i ~/.ssh/id_hetzner_cluster root@10.0.0.2
+```
+
+If Tailscale is unavailable, use the Hetzner web console for recovery. Do not
+reopen public ports 22 or 6443 except for a short, explicitly monitored recovery
+window.
+
+The current cluster was migrated to Tailscale after creation. For a full cluster
+rebuild, use hetzner-k3s's native Tailscale integration during provisioning; do
+not attempt the initial bootstrap with `use_private_ip: true` before the private
+route exists.
 
 ## Install ingress-nginx
 
@@ -76,6 +97,7 @@ helm repo update
 helm upgrade --install \
   --namespace cert-manager \
   --create-namespace \
+  --version v1.20.5 \
   --set crds.enabled=true \
   cert-manager jetstack/cert-manager
 ```
