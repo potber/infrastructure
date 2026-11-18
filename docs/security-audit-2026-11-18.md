@@ -19,12 +19,13 @@ The original review was read-only. No packages, workloads, firewall rules, or cl
 
 The following live fixes were completed later on 2026-11-18 without restarting cluster nodes:
 
-- Flux's `allow-webhooks` NetworkPolicy was restricted to TCP 9292.
+- Flux custom resources were migrated to their stable APIs, and Flux was upgraded from `v2.8.3` to `v2.9.6`. The generated `allow-webhooks` NetworkPolicy now natively restricts ingress to TCP 9292, and the Flux controller bundle is included in the production GitOps Kustomization so future upgrades reconcile automatically.
 - cert-manager was upgraded from `v1.20.0` to the security-fixed `v1.20.5` patch release.
 - ingress-nginx was configured to reject snippet annotations and annotations above Medium risk.
 - the Hetzner DNS API token was rotated and validated against the `potber.de` zone.
 - the expired preview wildcard certificate was reissued and externally verified on both preview hosts. It is valid until 2027-02-16 and scheduled to renew on 2027-01-17.
 - Tailscale private administration was enabled through `cluster-master1`, which advertises the Hetzner `10.0.0.0/16` network. The local kubeconfig now uses `10.0.0.2:6443`, and public TCP 22 and 6443 were externally verified closed on all three nodes.
+- the local `kubectl` client was upgraded from `v1.33.9` to the supported `v1.35.10` patch release.
 
 The remaining findings below preserve the state observed during the original audit and explain why each remediation was required.
 

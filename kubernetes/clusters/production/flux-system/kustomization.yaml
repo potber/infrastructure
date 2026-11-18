@@ -3,13 +3,3 @@ kind: Kustomization
 resources:
 - gotk-components.yaml
 - gotk-sync.yaml
-patches:
-- target:
-    kind: NetworkPolicy
-    name: allow-webhooks
-  patch: |-
-    - op: add
-      path: /spec/ingress/0/ports
-      value:
-      - protocol: TCP
-        port: 9292
