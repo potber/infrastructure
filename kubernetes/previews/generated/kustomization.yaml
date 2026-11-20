@@ -3,4 +3,3 @@ kind: Kustomization
 resources:
   - pr-107.yaml
   - pr-132.yaml
-  - pr-170.yaml
