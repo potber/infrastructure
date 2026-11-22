@@ -15,7 +15,7 @@ data:
       AUTH_ISSUER_URL: 'https://test-auth.potber.de',
       AUTH_CLIENT_ID: '1af5d165-2357-4bae-817d-a1d7f471ef67',
       APPSIGNAL_FRONTEND_KEY: '',
-      APPSIGNAL_REVISION: 'pr-182-3e249d14d60bab8237b8b318717bf965739c421a',
+      APPSIGNAL_REVISION: 'pr-182-bbdfe07909432e7fe6c75eee3efa8ba313a9e732',
       MEME_HOST_URL: 'https://pr-182.preview.potber.de'
     };
 ---
@@ -51,7 +51,7 @@ spec:
           emptyDir: {}
       containers:
         - name: potber-client
-          image: ghcr.io/potber/potber-client:pr-182-3e249d14d60bab8237b8b318717bf965739c421a
+          image: ghcr.io/potber/potber-client:pr-182-bbdfe07909432e7fe6c75eee3efa8ba313a9e732
           imagePullPolicy: Always
           ports:
             - name: http
