@@ -3,3 +3,4 @@ kind: Kustomization
 resources:
   - pr-132.yaml
   - pr-190.yaml
+  - pr-191.yaml
